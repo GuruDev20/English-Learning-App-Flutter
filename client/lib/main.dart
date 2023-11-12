@@ -1,4 +1,8 @@
 import 'package:client/admin/admin.dart';
+import 'package:client/admin/assessment.dart';
+import 'package:client/admin/content.dart';
+import 'package:client/admin/photos.dart';
+import 'package:client/admin/videos.dart';
 import 'package:client/screens/home.dart';
 import 'package:client/screens/login.dart';
 import 'package:client/screens/register.dart';
@@ -23,7 +27,10 @@ class MainApp extends StatelessWidget {
         WhyEnglishScreen.id:(context)=>const WhyEnglishScreen(),
         HomeScreen.id:(context)=>const HomeScreen(),
         AdminScreen.id:(context) =>const AdminScreen(),
-        
+        VideoScreen.id:(context)=>const VideoScreen(),
+        PhotoScreen.id:(context)=>const PhotoScreen(),
+        AssessmentScreen.id:(context)=>const AssessmentScreen(),
+        AdminEdit.id:(context)=>AdminEdit()
       },
     );
   }

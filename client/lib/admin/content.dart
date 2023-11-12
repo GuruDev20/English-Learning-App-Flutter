@@ -1,5 +1,8 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 class AdminEdit extends StatefulWidget {
+  static const String id="admin-edit";
   @override
   _AdminEditState createState() => _AdminEditState();
 }
@@ -7,7 +10,39 @@ class AdminEdit extends StatefulWidget {
 class _AdminEditState extends State<AdminEdit> {
   TextEditingController titleController = TextEditingController();
   TextEditingController contentsController = TextEditingController();
-
+  Future<void> createContent() async{
+    final response = await http.post(
+      Uri.parse('http://192.168.47.79:3000/createContent'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'title':titleController.text,
+        'content':contentsController.text
+      }),
+    );
+    if (response.statusCode == 200) {
+      print("Content created successfully.");
+    } else if (response.statusCode == 400) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Error in creating content"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        ),
+      );
+    } else {
+      print("Failed to create user. Status code: ${response.statusCode}");
+      print("Response body: ${response.body}");
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -83,6 +118,7 @@ class _AdminEditState extends State<AdminEdit> {
                 const SizedBox(height: 20,),
                 ElevatedButton(
                   onPressed: () {
+                    createContent();
                     print('Title: ${titleController.text}');
                     print('Contents: ${contentsController.text}');
                     Navigator.of(context).pop();
