@@ -23,6 +23,43 @@ class _AdminEditState extends State<AdminEdit> {
     );
     if (response.statusCode == 200) {
       print("Content created successfully.");
+      titleController.clear();
+      contentsController.clear();
+    } else if (response.statusCode == 400) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Error in creating content"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
+          ],
+        ),
+      );
+    } else {
+      print("Failed to create user. Status code: ${response.statusCode}");
+      print("Response body: ${response.body}");
+    }
+  }
+  Future<void> addContent() async{
+    final response = await http.post(
+      Uri.parse('http://192.168.47.79:3000/addContent'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'title':titleController.text,
+        'content':contentsController.text
+      }),
+    );
+    if (response.statusCode == 201) {
+      print("Content added successfully.");
+      titleController.clear();
+      contentsController.clear();
     } else if (response.statusCode == 400) {
       showDialog(
         context: context,
@@ -55,7 +92,7 @@ class _AdminEditState extends State<AdminEdit> {
             const SizedBox(height: 20,),
             ElevatedButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                _showAddContentDialog(context);
               },
               child: const Text('Add'),
               style: ElevatedButton.styleFrom(
@@ -119,6 +156,53 @@ class _AdminEditState extends State<AdminEdit> {
                 ElevatedButton(
                   onPressed: () {
                     createContent();
+                    print('Title: ${titleController.text}');
+                    print('Contents: ${contentsController.text}');
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Save'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF042D29),
+                    textStyle: TextStyle(
+                      fontFamily: 'Quicksand',
+                      color: Colors.white,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    minimumSize: Size(100, 50),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+  void _showAddContentDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Add Content"),
+          content: Container(
+            height: 220,
+            child: Column(
+              children: [
+                TextField(
+                  controller: titleController,
+                  decoration: InputDecoration(labelText: 'Existing Title'),
+                ),
+                const SizedBox(height: 20,),
+                TextField(
+                  controller: contentsController,
+                  decoration: InputDecoration(labelText: 'Contents'),
+                ),
+                const SizedBox(height: 20,),
+                ElevatedButton(
+                  onPressed: () {
+                    addContent();
                     print('Title: ${titleController.text}');
                     print('Contents: ${contentsController.text}');
                     Navigator.of(context).pop();

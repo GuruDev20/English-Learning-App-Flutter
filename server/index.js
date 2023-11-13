@@ -29,7 +29,6 @@ app.post('/createContent', async (req, res) => {
     const content = req.body.content;
     const collectionName = title;
     const contentSchema = new mongoose.Schema({
-      title: String,
       content: String,
     });
     const Content = mongoose.model(collectionName, contentSchema);
@@ -38,9 +37,36 @@ app.post('/createContent', async (req, res) => {
     res.status(200).send('Content created successfully.');
   } catch (error) {
     console.error(error);
+    res.status(400).send('Internal Server Error');
+  }
+});
+
+app.post('/addContent', async (req, res) => {
+  try {
+    const originalTitle = req.body.title;
+    const lowercaseTitle = originalTitle.toLowerCase();
+    const contentSchema = new mongoose.Schema({
+      content: String,
+    });
+    const ContentModel = mongoose.model(lowercaseTitle, contentSchema);
+
+    if (!ContentModel) {
+      return res.status(404).send(`Collection with title ${lowercaseTitle} not found`);
+    }
+
+    const newContent = new ContentModel({
+      content: req.body.content,
+    });
+
+    await newContent.save();
+
+    res.status(201).send('Content added successfully.');
+  } catch (error) {
+    console.error(error);
     res.status(500).send('Internal Server Error');
   }
 });
+
 
 app.listen(3000, () => {
   console.log(`Server is running on port 3000`);

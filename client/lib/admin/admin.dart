@@ -1,4 +1,5 @@
 import 'package:client/admin/content.dart';
+import 'package:client/admin/photos.dart';
 import 'package:flutter/material.dart';
 
 class AdminScreen extends StatefulWidget {
@@ -15,8 +16,14 @@ class _AdminScreenState extends State<AdminScreen> {
   String filePath = '';
 
   void addVideos() {}
-
-  void addPhotos() {}
+  void addPhotos() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return PhotoScreen();
+      },
+    );
+  }
 
   void addContent() {
     showDialog(
