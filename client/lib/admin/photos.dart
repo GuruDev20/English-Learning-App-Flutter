@@ -43,6 +43,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
 
       if (response.statusCode == 200) {
         print('Image uploaded successfully');
+        titleController.clear();
       } else {
         print(
             'Failed to upload image. Server responded with status code: ${response.statusCode}');

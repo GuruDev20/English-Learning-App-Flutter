@@ -83,15 +83,17 @@ app.post('/upload', upload.single('image'), async (req, res) => {
     const imagePath = req.file.path;
     const originalTitle = req.body.title;
     const lowercaseTitle = originalTitle.toLowerCase();
-    const contentSchema = new mongoose.Schema({
-      content: String,
-    });
-    const ContentModel = mongoose.model(lowercaseTitle, contentSchema);
-    if (!ContentModel) {
-      return res.status(404).send(`Collection with title ${lowercaseTitle} not found`);
+    let ContentModel;
+    try {
+      ContentModel = mongoose.model(lowercaseTitle);
+    } catch (error) {
+      ContentModel = mongoose.model(lowercaseTitle, new mongoose.Schema({
+        content: String,
+      }));
     }
+
     const newContent = new ContentModel({
-      content: imagePath, 
+      content: imagePath,
     });
 
     await newContent.save();
@@ -101,6 +103,7 @@ app.post('/upload', upload.single('image'), async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
 app.listen(3000, () => {
