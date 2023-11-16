@@ -43,6 +43,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
       if (response.statusCode == 200) {
         print('Image uploaded successfully');
         titleController.clear();
+        Navigator.pop(context);
       } else {
         print(
             'Failed to upload image. Server responded with status code: ${response.statusCode}');
@@ -71,6 +72,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
       if (response.statusCode == 200) {
         print('Image uploaded successfully');
         titleController.clear();
+        Navigator.pop(context);
       } else {
         print(
             'Failed to upload image. Server responded with status code: ${response.statusCode}');
@@ -234,7 +236,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
               children: [
                 TextField(
                   controller: titleController,
-                  decoration: InputDecoration(labelText: 'Existing Title'),
+                  decoration: InputDecoration(labelText: 'Title'),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(

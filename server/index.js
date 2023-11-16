@@ -138,7 +138,72 @@ app.post("/newupload", upload.single("image"), async (req, res) => {
   }
 });
 
+const vstorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/Videos");
+  },
+  filename: (req, file, cb) => {
+    cb(
+      null,
+      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
 
+const vupload = multer({ storage: vstorage });
+
+app.post('/newVideo', vupload.single('video'), async (req, res) => { 
+  try {
+    const title = req.body.title;
+    const videoPath = req.file.path;
+
+    const contentSchema = new mongoose.Schema({
+      content: {
+        type: String,
+        required: true,
+      },
+    });
+
+    const Content = mongoose.model(title, contentSchema);
+
+    const newContent = new Content({ content: videoPath });
+    await newContent.save();
+
+    res.status(200).json({ message: "Video uploaded successfully" });
+  } catch (error) {
+    console.error("Error uploading Video:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
+app.post('/oldVideo', vupload.single('video'), async (req, res) => {
+  try {
+    const title = req.body.title;
+    const videoPath = req.file.path;
+    const lowercaseTitle = title.toLowerCase();
+    let ContentModel;
+
+    try {
+      ContentModel = mongoose.model(lowercaseTitle);
+    } catch (error) {
+      ContentModel = mongoose.model(
+        lowercaseTitle,
+        new mongoose.Schema({
+          content: String,
+        })
+      );
+    }
+
+    const newContent = new ContentModel({ content: videoPath });
+    await newContent.save();
+
+    res.status(200).json({ message: "Video uploaded successfully" });
+  } catch (error) {
+    console.error("Error uploading Video:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 app.listen(3000, () => {
   console.log(`Server is running on port 3000`);
