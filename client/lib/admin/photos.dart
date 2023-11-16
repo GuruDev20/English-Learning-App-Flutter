@@ -23,7 +23,34 @@ class _PhotoScreenState extends State<PhotoScreen> {
       });
     }
   }
+  Future<void> addImage() async {
+    if (selectedImage == null) {
+      return;
+    }
 
+    var url = Uri.parse("http://192.168.18.79:3000/newupload");
+    String title = titleController.text;
+    var request = http.MultipartRequest('POST', url);
+    request.fields['title'] = title;
+    request.files.add(
+      await http.MultipartFile.fromPath('image',selectedImage!.path,
+      ),
+    );
+
+    try {
+      var response = await request.send();
+
+      if (response.statusCode == 200) {
+        print('Image uploaded successfully');
+        titleController.clear();
+      } else {
+        print(
+            'Failed to upload image. Server responded with status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error uploading image: $error');
+    }
+  }
   Future<void> storeImage() async {
     if (selectedImage == null) {
       return;
@@ -112,8 +139,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
     );
   }
 
-  void _showNewContentDialog(BuildContext context) {}
-  void _showAddContentDialog(BuildContext context) {
+  void _showNewContentDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -121,6 +147,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
           title: const Text("Add Content"),
           content: Container(
             width: 270,
+            height: 400,
             child: Column(
               children: [
                 TextField(
@@ -147,11 +174,94 @@ class _PhotoScreenState extends State<PhotoScreen> {
                 ),
                 const SizedBox(height: 20),
                 selectedImage != null
-                    ? Image.file(
-                        selectedImage!,
-                        height: 100,
-                      )
-                    : Container(),
+                  ? Image.file(
+                      selectedImage!,
+                      height: 200,
+                      width: 200,
+                    )
+                  : Container(),
+              ],
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+              style: ElevatedButton.styleFrom(
+                primary: Color(0xFF042D29),
+                textStyle: TextStyle(
+                  fontFamily: 'Quicksand',
+                  color: Colors.white,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                addImage();
+              },
+              child: const Text('Add'),
+              style: ElevatedButton.styleFrom(
+                primary: Color(0xFF042D29),
+                textStyle: TextStyle(
+                  fontFamily: 'Quicksand',
+                  color: Colors.white,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void _showAddContentDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Add Content"),
+          content: Container(
+            width: 270,
+            height: 400,
+            child: Column(
+              children: [
+                TextField(
+                  controller: titleController,
+                  decoration: InputDecoration(labelText: 'Existing Title'),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    _selectImage();
+                  },
+                  child: const Text('Select Images from Gallery'),
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF042D29),
+                    textStyle: TextStyle(
+                      fontFamily: 'Quicksand',
+                      color: Colors.white,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    minimumSize: Size(200, 50),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                selectedImage != null
+                  ? Image.file(
+                      selectedImage!,
+                      height: 200,
+                      width: 200,
+                    )
+                  : Container(),
               ],
             ),
           ),

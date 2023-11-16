@@ -1,12 +1,12 @@
-const mongoose = require('mongoose');
-const express = require('express');
+const mongoose = require("mongoose");
+const express = require("express");
 const app = express();
-const path = require('path');
-const multer = require('multer');
-const UserModel = require('./models/User');
+const path = require("path");
+const multer = require("multer");
+const UserModel = require("./models/User");
 app.use(express.json());
-mongoose.connect('mongodb://127.0.0.1:27017/English_Project_App');
-app.post('/createUser', async (req, res) => {
+mongoose.connect("mongodb://127.0.0.1:27017/English_Project_App");
+app.post("/createUser", async (req, res) => {
   try {
     const data = new UserModel(req.body);
     await data.save();
@@ -16,7 +16,7 @@ app.post('/createUser', async (req, res) => {
   }
 });
 
-app.get('/getuser', async (req, res) => {
+app.get("/getuser", async (req, res) => {
   try {
     const data = await UserModel.find({});
     res.status(200).send(data);
@@ -25,7 +25,7 @@ app.get('/getuser', async (req, res) => {
   }
 });
 
-app.post('/createContent', async (req, res) => {
+app.post("/createContent", async (req, res) => {
   try {
     const title = req.body.title;
     const content = req.body.content;
@@ -36,14 +36,14 @@ app.post('/createContent', async (req, res) => {
     const Content = mongoose.model(collectionName, contentSchema);
     const newContent = new Content({ title, content });
     await newContent.save();
-    res.status(200).send('Content created successfully.');
+    res.status(200).send("Content created successfully.");
   } catch (error) {
     console.error(error);
-    res.status(400).send('Internal Server Error');
+    res.status(400).send("Internal Server Error");
   }
 });
 
-app.post('/addContent', async (req, res) => {
+app.post("/addContent", async (req, res) => {
   try {
     const originalTitle = req.body.title;
     const lowercaseTitle = originalTitle.toLowerCase();
@@ -53,7 +53,9 @@ app.post('/addContent', async (req, res) => {
     const ContentModel = mongoose.model(lowercaseTitle, contentSchema);
 
     if (!ContentModel) {
-      return res.status(404).send(`Collection with title ${lowercaseTitle} not found`);
+      return res
+        .status(404)
+        .send(`Collection with title ${lowercaseTitle} not found`);
     }
 
     const newContent = new ContentModel({
@@ -62,23 +64,26 @@ app.post('/addContent', async (req, res) => {
 
     await newContent.save();
 
-    res.status(201).send('Content added successfully.');
-  }catch (error) {
-    console.error('Error uploading image:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }  
+    res.status(201).send("Content added successfully.");
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'public/Images');
+    cb(null, "public/Images");
   },
   filename: (req, file, cb) => {
-    cb(null, file.fieldname + '_' + Date.now() + path.extname(file.originalname));
+    cb(
+      null,
+      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+    );
   },
 });
 
 const upload = multer({ storage: storage });
-app.post('/upload', upload.single('image'), async (req, res) => {
+app.post("/upload", upload.single("image"), async (req, res) => {
   try {
     const imagePath = req.file.path;
     const originalTitle = req.body.title;
@@ -87,9 +92,12 @@ app.post('/upload', upload.single('image'), async (req, res) => {
     try {
       ContentModel = mongoose.model(lowercaseTitle);
     } catch (error) {
-      ContentModel = mongoose.model(lowercaseTitle, new mongoose.Schema({
-        content: String,
-      }));
+      ContentModel = mongoose.model(
+        lowercaseTitle,
+        new mongoose.Schema({
+          content: String,
+        })
+      );
     }
 
     const newContent = new ContentModel({
@@ -97,10 +105,36 @@ app.post('/upload', upload.single('image'), async (req, res) => {
     });
 
     await newContent.save();
-    res.status(200).json({ message: 'Image uploaded successfully to existing collection' });
+    res
+      .status(200)
+      .json({ message: "Image uploaded successfully to existing collection" });
   } catch (error) {
-    console.error('Error uploading image:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error uploading image:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.post("/newupload", upload.single("image"), async (req, res) => {
+  try {
+    const title = req.body.title;
+    const imagePath = req.file.path;
+
+    const contentSchema = new mongoose.Schema({
+      content: {
+        type: String,
+        required: true,
+      },
+    });
+
+    const Content = mongoose.model(title, contentSchema);
+
+    const newContent = new Content({ content: imagePath });
+    await newContent.save();
+
+    res.status(200).json({ message: "Image uploaded successfully" });
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
