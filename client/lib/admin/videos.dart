@@ -14,12 +14,20 @@ class _VideoScreenState extends State<VideoScreen> {
   TextEditingController titleController = TextEditingController();
   XFile? _video;
   final ImagePicker _picker = ImagePicker();
+  Future<void> _showSnackbar(String message) async {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
   Future<void> addoldVideo() async {
     if (_video == null || titleController.text.isEmpty) {
       return;
     }
 
-    var url = Uri.parse("http://192.168.18.79:3000/oldVideo");
+    var url = Uri.parse("http://192.168.110.79:3000/oldVideo");
     String title = titleController.text;
     var request = http.MultipartRequest('POST', url);
     request.fields['title'] = title;
@@ -35,17 +43,19 @@ class _VideoScreenState extends State<VideoScreen> {
 
       if (response.statusCode == 200) {
         print('Video uploaded successfully');
+        _showSnackbar('Video uploaded successfully');
         titleController.clear();
         Navigator.pop(context);
       } else {
         print(
             'Failed to upload video. Server responded with status code: ${response.statusCode}');
+        _showSnackbar('Failed to upload video');
       }
     } catch (error) {
       print('Error uploading video: $error');
+      _showSnackbar('Error uploading video');
     }
   }
-
   Future<void> addVideo() async {
     if (_video == null || titleController.text.isEmpty) {
       return;
@@ -67,14 +77,17 @@ class _VideoScreenState extends State<VideoScreen> {
 
       if (response.statusCode == 200) {
         print('Video uploaded successfully');
+        _showSnackbar('Video uploaded successfully');
         titleController.clear();
         Navigator.pop(context);
       } else {
         print(
             'Failed to upload video. Server responded with status code: ${response.statusCode}');
+            _showSnackbar('Failed to upload video');
       }
     } catch (error) {
       print('Error uploading video: $error');
+      _showSnackbar('Error uploading video');
     }
   }
 

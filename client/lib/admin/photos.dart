@@ -28,7 +28,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
       return;
     }
 
-    var url = Uri.parse("http://192.168.18.79:3000/newupload");
+    var url = Uri.parse("http://192.168.110.79:3000/newupload");
     String title = titleController.text;
     var request = http.MultipartRequest('POST', url);
     request.fields['title'] = title;
