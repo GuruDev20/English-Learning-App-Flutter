@@ -70,7 +70,12 @@ class _AdminScreenState extends State<AdminScreen> {
   }
 
   void addTest() {}
+  Future<void> collectionNameEdit() async{
+    
+  }
+  Future<void> collectionNameDelete() async{
 
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,8 +142,7 @@ class _AdminScreenState extends State<AdminScreen> {
   }
 
   Widget buildCard(String collectionName, bool isEven) {
-    String formattedName =
-        '${collectionName[0].toUpperCase()}${collectionName.substring(1)}';
+    String formattedName ='${collectionName[0].toUpperCase()}${collectionName.substring(1)}';
 
     return SizedBox(
       width: 500,
@@ -162,12 +166,16 @@ class _AdminScreenState extends State<AdminScreen> {
             Row(
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    collectionNameEdit;
+                  },
                   icon: Icon(Icons.edit),
                   color: isEven ? Colors.white : Colors.black,
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    collectionNameDelete;
+                  },
                   icon: Icon(Icons.delete),
                   color: isEven ? Colors.white : Colors.black,
                 ),
