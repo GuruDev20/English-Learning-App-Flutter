@@ -11,6 +11,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/English_Project_App");
 const connection = mongoose.connection;
 connection.once('open', () => {
     console.log('MongoDB database connection established successfully');
+    fetchCollectionNames();
 });
 app.post("/createUser", async (req, res) => {
   try {
@@ -211,16 +212,73 @@ app.post('/oldVideo', vupload.single('video'), async (req, res) => {
   }
 });
 
-app.get('/collectionNames', async (req, res) => {
+let collectionNames = [];
+
+async function fetchCollectionNames() {
+  try {
+    const collections = await mongoose.connection.db
+      .listCollections()
+      .toArray();
+    collectionNames = collections
+      .map((collection) => collection.name)
+      .filter((name) => name !== "users");
+    console.log("Collection names fetched:", collectionNames);
+  } catch (error) {
+    console.error("Error fetching collection names:", error);
+  }
+}
+
+app.get("/collectionNames", async (req, res) => {
+  res.json(collectionNames);
+});
+
+app.put("/updateCollectionName", async (req, res) => {
+  const { oldName, newName } = req.body;
+
   try {
     const collections = await mongoose.connection.db.listCollections().toArray();
-    const collectionNames = collections.map(collection => collection.name).filter(name => name !== 'users');
-    res.json(collectionNames);
+    const collectionExists = collections.some(collection => collection.name === oldName);
+    if (collectionExists) {
+      await mongoose.connection.db.collection(oldName).rename(newName);
+      const index = collectionNames.indexOf(oldName);
+      if (index !== -1) {
+        collectionNames[index] = newName;
+      }
+      res.sendStatus(200);
+    } else {
+      res.status(404).send("Collection not found");
+    }
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
+    console.error("Error updating collection name:", error);
+    res.status(500).send("Internal server error");
   }
 });
+
+app.delete("/deleteCollectionName", async (req, res) => {
+  const collectionName = req.body.collectionName;
+
+  try {
+    const collections = await mongoose.connection.db.listCollections().toArray();
+    const collectionExists = collections.some(collection => collection.name === collectionName);
+
+    if (collectionExists) {
+      await mongoose.connection.db.collection(collectionName).drop(); 
+      const index = collectionNames.indexOf(collectionName);
+      
+      if (index !== -1) {
+        collectionNames.splice(index, 1);
+      }
+
+      res.sendStatus(200);
+    } else {
+      res.status(404).send("Collection not found");
+    }
+  } catch (error) {
+    console.error("Error deleting collection:", error);
+    res.status(500).send("Internal server error");
+  }
+});
+
 
 app.listen(3000, () => {
   console.log(`Server is running on port 3000`);

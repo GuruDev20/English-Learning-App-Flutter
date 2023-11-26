@@ -1,13 +1,12 @@
+import 'package:flutter/material.dart';
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:client/admin/content.dart';
 import 'package:client/admin/photos.dart';
 import 'package:client/admin/videos.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class AdminScreen extends StatefulWidget {
-  static const String id = "admiinscreen";
+  static const String id = "adminscreen";
 
   const AdminScreen({Key? key}) : super(key: key);
 
@@ -25,6 +24,7 @@ class _AdminScreenState extends State<AdminScreen> {
   String contentName = '';
   String filePath = '';
   List<String> collectionNames = [];
+
   Future<void> fetchCollectionNames() async {
     try {
       final response = await http
@@ -70,12 +70,82 @@ class _AdminScreenState extends State<AdminScreen> {
   }
 
   void addTest() {}
-  Future<void> collectionNameEdit() async{
-    
-  }
-  Future<void> collectionNameDelete() async{
 
+  Future<void> collectionNameEdit(String oldName) async {
+    TextEditingController newNameController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Edit Collection Name"),
+          content: TextField(
+            controller: newNameController,
+            decoration: InputDecoration(hintText: "Enter new name"),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                String newName = newNameController.text.trim();
+                print(newName);
+                print(oldName);
+                if (newName.isNotEmpty) {
+                  await updateCollectionName(oldName, newName);
+                  Navigator.of(context).pop();
+                  fetchCollectionNames();
+                }
+              },
+              child: Text("Save"),
+            ),
+          ],
+        );
+      },
+    );
   }
+
+  Future<void> updateCollectionName(String oldName, String newName) async {
+    try {
+      final response = await http.put(
+        Uri.parse('http://192.168.110.79:3000/updateCollectionName'),
+        body: jsonEncode({'oldName': oldName, 'newName': newName}),
+        headers: {'Content-Type': 'application/json'},
+      );
+      if (response.statusCode != 200) {
+        print(
+            'Failed to update collection name. Status code: ${response.statusCode}');
+      } else {
+        print('Updated collection name');
+      }
+    } catch (error) {
+      print('Error updating collection name: $error');
+    }
+  }
+
+  Future<void> collectionNameDelete(String name) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('http://192.168.110.79:3000/deleteCollectionName'),
+        body: jsonEncode({'collectionName': name}),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        print('Deleted collection');
+        fetchCollectionNames();
+      } else {
+        print(
+            'Failed to delete collection. Status code: ${response.statusCode}');
+      }
+    } catch (error) {
+      print('Error deleting collection: $error');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,7 +212,8 @@ class _AdminScreenState extends State<AdminScreen> {
   }
 
   Widget buildCard(String collectionName, bool isEven) {
-    String formattedName ='${collectionName[0].toUpperCase()}${collectionName.substring(1)}';
+    String formattedName =
+        '${collectionName[0].toUpperCase()}${collectionName.substring(1)}';
 
     return SizedBox(
       width: 500,
@@ -167,14 +238,14 @@ class _AdminScreenState extends State<AdminScreen> {
               children: [
                 IconButton(
                   onPressed: () {
-                    collectionNameEdit;
+                    collectionNameEdit(collectionName);
                   },
                   icon: Icon(Icons.edit),
                   color: isEven ? Colors.white : Colors.black,
                 ),
                 IconButton(
                   onPressed: () {
-                    collectionNameDelete;
+                    collectionNameDelete(collectionName);
                   },
                   icon: Icon(Icons.delete),
                   color: isEven ? Colors.white : Colors.black,
