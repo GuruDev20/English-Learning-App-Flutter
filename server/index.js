@@ -3,9 +3,15 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const multer = require("multer");
+const cors=require("cors");
 const UserModel = require("./models/User");
 app.use(express.json());
+app.use(cors());
 mongoose.connect("mongodb://127.0.0.1:27017/English_Project_App");
+const connection = mongoose.connection;
+connection.once('open', () => {
+    console.log('MongoDB database connection established successfully');
+});
 app.post("/createUser", async (req, res) => {
   try {
     const data = new UserModel(req.body);
@@ -202,6 +208,17 @@ app.post('/oldVideo', vupload.single('video'), async (req, res) => {
   } catch (error) {
     console.error("Error uploading Video:", error);
     res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+app.get('/collectionNames', async (req, res) => {
+  try {
+    const collections = await mongoose.connection.db.listCollections().toArray();
+    const collectionNames = collections.map(collection => collection.name).filter(name => name !== 'users');
+    res.json(collectionNames);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
   }
 });
 

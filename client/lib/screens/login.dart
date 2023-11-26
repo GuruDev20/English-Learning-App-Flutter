@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); 
+                Navigator.pop(context);
               },
               child: Text("OK"),
             ),
@@ -73,6 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isPasswordValid(String password) {
     return password.isNotEmpty && password.length >= 6;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,14 +137,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 40),
                     ElevatedButton(
-              onPressed: () {
-                if (isEmailValid(emailController.text) &&
-                    isPasswordValid(passwordController.text)) {
-                  getUser();
-                } else {
-                  showNoUserDialog();
-                }
-              },
+                      onPressed: () {
+                        if (isEmailValid(emailController.text) &&
+                            isPasswordValid(passwordController.text)) {
+                          getUser();
+                        } else {
+                          showNoUserDialog();
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.black,
                         shape: RoundedRectangleBorder(
