@@ -307,9 +307,10 @@ app.get('/data/:title', async (req, res) => {
       },
     });
     const ContentModel = mongoose.model(title, contentSchema);
-    const result = await ContentModel.findOne();
-    if (result) {
-      res.json({ content: result.content });
+    const results = await ContentModel.find();
+    if (results.length > 0) {
+      const contentArray = results.map(result => result.content);
+      res.json({ content: contentArray });
     } else {
       res.status(404).json({ error: 'Data not found' });
     }
@@ -318,6 +319,7 @@ app.get('/data/:title', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
 app.listen(PORT, () => {

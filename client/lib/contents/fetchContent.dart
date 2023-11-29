@@ -13,7 +13,7 @@ class FetchContent extends StatefulWidget {
 }
 
 class _FetchContentState extends State<FetchContent> {
-  String contentData = '';
+  List<dynamic> contentArray = [];
   late VideoPlayerController _controller;
 
   @override
@@ -31,10 +31,10 @@ class _FetchContentState extends State<FetchContent> {
         final responseData = json.decode(response.body);
         final content = responseData['content'];
         setState(() {
-          contentData = content;
+          contentArray = content;
         });
-        if (_isVideo(contentData)) {
-          _controller = VideoPlayerController.network(contentData);
+        if (contentArray.isNotEmpty && _isVideo(contentArray[0])) {
+          _controller = VideoPlayerController.network(contentArray[0]);
           _controller.initialize().then((_) {
             setState(() {});
           });
@@ -47,8 +47,8 @@ class _FetchContentState extends State<FetchContent> {
     }
   }
 
-  bool _isVideo(String data) {
-    return data.endsWith('.mp4');
+  bool _isVideo(dynamic data) {
+    return data is String && data.endsWith('.mp4');
   }
 
   @override
@@ -73,40 +73,42 @@ class _FetchContentState extends State<FetchContent> {
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    shadowColor: Colors.grey,
-                    elevation: 10.0,
-                    child: contentData.isNotEmpty
-                        ? _buildContentWidget()
-                        : Center(child: CircularProgressIndicator()),
-                  ),
-                ),
-              ),
-            ],
+            children: contentArray.map((content) {
+              return _buildContentCard(content);
+            }).toList(),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildContentWidget() {
-    if (_isVideo(contentData)) {
+  Widget _buildContentCard(dynamic content) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          shadowColor: Colors.grey,
+          elevation: 10.0,
+          child: _buildContentWidget(content),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContentWidget(dynamic content) {
+    if (_isVideo(content)) {
       return _buildVideoPlayer();
     } else {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Text(
-            contentData,
+            content.toString(),
             style: TextStyle(
               color: Colors.black,
               fontSize: 22,
