@@ -1,3 +1,4 @@
+import 'package:client/contents/fetchContent.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -27,28 +28,29 @@ class _AdminScreenState extends State<AdminScreen> {
 
   Future<void> fetchCollectionNames() async {
     try {
-      final response = await http
-          .get(Uri.parse('http://192.168.110.79:3000/collectionNames'));
+      final response = await http.get(Uri.parse('http://192.168.110.79:3000/collectionNames'));
       if (response.statusCode == 200) {
         setState(() {
           collectionNames = List<String>.from(json.decode(response.body));
         });
       } else {
-        print(
-            'Failed to fetch collection names. Status code: ${response.statusCode}');
+        print('Failed to fetch collection names. Status code: ${response.statusCode}');
       }
     } catch (error) {
       print('Error fetching collection names: $error');
     }
   }
-
   void addVideos() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return VideoScreen();
       },
-    );
+    ).then((value) {
+      if (value != null && value) {
+        fetchCollectionNames();
+      }
+    });
   }
 
   void addPhotos() {
@@ -57,7 +59,11 @@ class _AdminScreenState extends State<AdminScreen> {
       builder: (BuildContext context) {
         return PhotoScreen();
       },
-    );
+    ).then((value) {
+      if (value != null && value) {
+        fetchCollectionNames();
+      }
+    });
   }
 
   void addContent() {
@@ -66,7 +72,11 @@ class _AdminScreenState extends State<AdminScreen> {
       builder: (BuildContext context) {
         return AdminEdit();
       },
-    );
+    ).then((value) {
+      if (value != null && value) {
+        fetchCollectionNames();
+      }
+    });
   }
 
   void addTest() {}
@@ -116,8 +126,7 @@ class _AdminScreenState extends State<AdminScreen> {
         headers: {'Content-Type': 'application/json'},
       );
       if (response.statusCode != 200) {
-        print(
-            'Failed to update collection name. Status code: ${response.statusCode}');
+        print('Failed to update collection name. Status code: ${response.statusCode}');
       } else {
         print('Updated collection name');
       }
@@ -138,8 +147,7 @@ class _AdminScreenState extends State<AdminScreen> {
         print('Deleted collection');
         fetchCollectionNames();
       } else {
-        print(
-            'Failed to delete collection. Status code: ${response.statusCode}');
+        print('Failed to delete collection. Status code: ${response.statusCode}');
       }
     } catch (error) {
       print('Error deleting collection: $error');
@@ -150,7 +158,8 @@ class _AdminScreenState extends State<AdminScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('AdminScreen'),
+        leading: Icon(Icons.menu_book),
+        title: Text('AdminScreen',style: TextStyle(fontFamily: 'Quicksand'),),
         backgroundColor: Color(0xFF042D29),
       ),
       body: Column(
@@ -164,7 +173,7 @@ class _AdminScreenState extends State<AdminScreen> {
                   children: [
                     ElevatedButton(
                       onPressed: addVideos,
-                      child: Text('Add Videos'),
+                      child: Text('Add Videos',style: TextStyle(fontFamily: 'Quicksand'),),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF042D29),
                       ),
@@ -172,7 +181,7 @@ class _AdminScreenState extends State<AdminScreen> {
                     SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: addPhotos,
-                      child: Text('Add Photos'),
+                      child: Text('Add Photos',style: TextStyle(fontFamily: 'Quicksand'),),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF042D29),
                       ),
@@ -180,7 +189,7 @@ class _AdminScreenState extends State<AdminScreen> {
                     SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: addContent,
-                      child: Text('Add Content'),
+                      child: Text('Add Content',style: TextStyle(fontFamily: 'Quicksand'),),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF042D29),
                       ),
@@ -188,7 +197,7 @@ class _AdminScreenState extends State<AdminScreen> {
                     SizedBox(width: 20),
                     ElevatedButton(
                       onPressed: addTest,
-                      child: Text('Add Assessment'),
+                      child: Text('Add Assessment',style: TextStyle(fontFamily: 'Quicksand'),),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFF042D29),
                       ),
@@ -212,54 +221,63 @@ class _AdminScreenState extends State<AdminScreen> {
   }
 
   Widget buildCard(String collectionName, bool isEven) {
-    String formattedName =
-        '${collectionName[0].toUpperCase()}${collectionName.substring(1)}';
-
-    return SizedBox(
-      width: 500,
-      height: 130,
-      child: Card(
-        color: isEven ? Color(0xFF042D29) : Colors.white,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 14.0),
-              child: Text(
-                formattedName,
-                style: TextStyle(
-                  color: isEven ? Colors.white : Colors.black,
-                  fontSize: 22,
+     String formattedName ='${collectionName[0].toUpperCase()}${collectionName.substring(1)}';
+    return TextButton(
+      child: SizedBox(
+        width: 500,
+        height: 130,
+        child: Card(
+          color: isEven ? Color(0xFF042D29) : Colors.white,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 14.0),
+                child: Text(
+                  formattedName,
+                  style: TextStyle(
+                    color: isEven ? Colors.white : Colors.black,
+                    fontSize: 22,
+                    fontFamily: 'Quicksand'
+                  ),
                 ),
               ),
-            ),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    collectionNameEdit(collectionName);
-                  },
-                  icon: Icon(Icons.edit),
-                  color: isEven ? Colors.white : Colors.black,
-                ),
-                IconButton(
-                  onPressed: () {
-                    collectionNameDelete(collectionName);
-                  },
-                  icon: Icon(Icons.delete),
-                  color: isEven ? Colors.white : Colors.black,
-                ),
-              ],
-            ),
-          ],
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      collectionNameEdit(collectionName);
+                    },
+                    icon: Icon(Icons.edit),
+                    color: isEven ? Colors.white : Colors.black,
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      collectionNameDelete(collectionName);
+                    },
+                    icon: Icon(Icons.delete),
+                    color: isEven ? Colors.white : Colors.black,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          shadowColor: Colors.grey,
+          elevation: 10,
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        shadowColor: Colors.grey,
-        elevation: 10,
       ),
+      onPressed: () async {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FetchContent(title: collectionName),
+          ),
+        );
+      },
     );
   }
 }

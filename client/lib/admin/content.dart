@@ -12,7 +12,7 @@ class _AdminEditState extends State<AdminEdit> {
   TextEditingController contentsController = TextEditingController();
   Future<void> createContent() async{
     final response = await http.post(
-      Uri.parse('http://192.168.18.79:3000/createContent'),
+      Uri.parse('http://192.168.110.79:3000/createContent'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -83,18 +83,18 @@ class _AdminEditState extends State<AdminEdit> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Add Content"),
+      title: const Text("Add Content",style: TextStyle(fontFamily: 'Quicksand'),),
       content: Container(
         height: 300,
         child: Column(
           children: [
-            const Text("Would you like to add content to the previous section?"),
+            const Text("Would you like to add content to the previous section?",style: TextStyle(fontFamily: 'Quicksand'),),
             const SizedBox(height: 20,),
             ElevatedButton(
               onPressed: () {
                 _showAddContentDialog(context);
               },
-              child: const Text('Add'),
+              child: const Text('Add',style: TextStyle(fontFamily: 'Quicksand'),),
               style: ElevatedButton.styleFrom(
                 primary: Color(0xFF042D29),
                 textStyle: TextStyle(
@@ -108,7 +108,7 @@ class _AdminEditState extends State<AdminEdit> {
               ),
             ),
             const SizedBox(height: 30,),
-            const Text("Create a new one?"),
+            const Text("Create a new one?",style: TextStyle(fontFamily: 'Quicksand'),),
             const SizedBox(height: 20,),
             ElevatedButton(
               onPressed: () {
@@ -138,7 +138,7 @@ class _AdminEditState extends State<AdminEdit> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("New Content"),
+          title: const Text("New Content",style: TextStyle(fontFamily: 'Quicksand'),),
           content: Container(
             height: 220,
             child: Column(
@@ -160,7 +160,7 @@ class _AdminEditState extends State<AdminEdit> {
                     print('Contents: ${contentsController.text}');
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Save'),
+                  child: const Text('Save',style: TextStyle(fontFamily: 'Quicksand'),),
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xFF042D29),
                     textStyle: TextStyle(
@@ -185,7 +185,7 @@ class _AdminEditState extends State<AdminEdit> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Add Content"),
+          title: const Text("Add Content",style: TextStyle(fontFamily: 'Quicksand'),),
           content: Container(
             height: 220,
             child: Column(
@@ -207,7 +207,7 @@ class _AdminEditState extends State<AdminEdit> {
                     print('Contents: ${contentsController.text}');
                     Navigator.of(context).pop();
                   },
-                  child: const Text('Save'),
+                  child: const Text('Save',style: TextStyle(fontFamily: 'Quicksand'),),
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xFF042D29),
                     textStyle: TextStyle(

@@ -3,6 +3,7 @@ import 'package:client/admin/assessment.dart';
 import 'package:client/admin/content.dart';
 import 'package:client/admin/photos.dart';
 import 'package:client/admin/videos.dart';
+import 'package:client/contents/fetchContent.dart';
 import 'package:client/screens/home.dart';
 import 'package:client/screens/login.dart';
 import 'package:client/screens/register.dart';
@@ -32,7 +33,8 @@ class MainApp extends StatelessWidget {
         VideoScreen.id: (context) => const VideoScreen(),
         PhotoScreen.id: (context) => const PhotoScreen(),
         AssessmentScreen.id: (context) => const AssessmentScreen(),
-        AdminEdit.id: (context) => AdminEdit()
+        AdminEdit.id: (context) => AdminEdit(),
+        FetchContent.id:(context) => FetchContent(title: '',)
       },
     );
   }

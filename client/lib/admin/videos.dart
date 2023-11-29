@@ -61,7 +61,7 @@ class _VideoScreenState extends State<VideoScreen> {
       return;
     }
 
-    var url = Uri.parse("http://192.168.18.79:3000/newVideo");
+    var url = Uri.parse("http://192.168.110.79:3000/newVideo");
     String title = titleController.text;
     var request = http.MultipartRequest('POST', url);
     request.fields['title'] = title;
@@ -107,13 +107,13 @@ class _VideoScreenState extends State<VideoScreen> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Add Content"),
+      title: const Text("Add Content",style: TextStyle(fontFamily: 'Quicksand'),),
       content: Container(
         height: 300,
         child: Column(
           children: [
             const Text(
-                "Would you like to add content to the previous section?"),
+                "Would you like to add content to the previous section?",style: TextStyle(fontFamily: 'Quicksand'),),
             const SizedBox(
               height: 20,
             ),
@@ -121,7 +121,7 @@ class _VideoScreenState extends State<VideoScreen> {
               onPressed: () {
                 _showAddVideoDialog(context);
               },
-              child: const Text('Add'),
+              child: const Text('Add',style: TextStyle(fontFamily: 'Quicksand'),),
               style: ElevatedButton.styleFrom(
                 primary: Color(0xFF042D29),
                 textStyle: TextStyle(
@@ -137,7 +137,7 @@ class _VideoScreenState extends State<VideoScreen> {
             const SizedBox(
               height: 30,
             ),
-            const Text("Create a new one?"),
+            const Text("Create a new one?",style: TextStyle(fontFamily: 'Quicksand'),),
             const SizedBox(
               height: 20,
             ),
@@ -168,7 +168,7 @@ class _VideoScreenState extends State<VideoScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Add Content"),
+          title: const Text("Add Content",style: TextStyle(fontFamily: 'Quicksand'),),
           content: Container(
             width: 270,
             height: 400,
@@ -183,7 +183,7 @@ class _VideoScreenState extends State<VideoScreen> {
                   onPressed: () async {
                     await _pickVideoFromGallery();
                   },
-                  child: const Text('Select Videos from Gallery'),
+                  child: const Text('Select Videos from Gallery',style: TextStyle(fontFamily: 'Quicksand'),),
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xFF042D29),
                     textStyle: TextStyle(
@@ -214,7 +214,7 @@ class _VideoScreenState extends State<VideoScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text('Cancel',style: TextStyle(fontFamily: 'Quicksand'),),
               style: ElevatedButton.styleFrom(
                 primary: Color(0xFF042D29),
                 textStyle: TextStyle(
@@ -230,7 +230,7 @@ class _VideoScreenState extends State<VideoScreen> {
               onPressed: () {
                 addVideo();
               },
-              child: const Text('Add'),
+              child: const Text('Add',style: TextStyle(fontFamily: 'Quicksand'),),
               style: ElevatedButton.styleFrom(
                 primary: Color(0xFF042D29),
                 textStyle: TextStyle(
@@ -253,7 +253,7 @@ class _VideoScreenState extends State<VideoScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Add Content"),
+          title: const Text("Add Content",style: TextStyle(fontFamily: 'Quicksand'),),
           content: Container(
             width: 270,
             height: 400,
@@ -268,7 +268,7 @@ class _VideoScreenState extends State<VideoScreen> {
                   onPressed: () async {
                     await _pickVideoFromGallery();
                   },
-                  child: const Text('Select Videos from Gallery'),
+                  child: const Text('Select Videos from Gallery',style: TextStyle(fontFamily: 'Quicksand'),),
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xFF042D29),
                     textStyle: TextStyle(
@@ -299,7 +299,7 @@ class _VideoScreenState extends State<VideoScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text('Cancel',style: TextStyle(fontFamily: 'Quicksand'),),
               style: ElevatedButton.styleFrom(
                 primary: Color(0xFF042D29),
                 textStyle: TextStyle(
@@ -315,7 +315,7 @@ class _VideoScreenState extends State<VideoScreen> {
               onPressed: () {
                 addoldVideo();
               },
-              child: const Text('Add'),
+              child: const Text('Add',style: TextStyle(fontFamily: 'Quicksand'),),
               style: ElevatedButton.styleFrom(
                 primary: Color(0xFF042D29),
                 textStyle: TextStyle(

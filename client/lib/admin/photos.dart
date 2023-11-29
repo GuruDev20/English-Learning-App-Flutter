@@ -57,7 +57,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
       return;
     }
 
-    var url = Uri.parse("http://192.168.18.79:3000/upload");
+    var url = Uri.parse("http://192.168.110.79:3000/upload");
     String title = titleController.text;
     var request = http.MultipartRequest('POST', url);
     request.fields['title'] = title;
@@ -85,13 +85,13 @@ class _PhotoScreenState extends State<PhotoScreen> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Add Content"),
+      title: const Text("Add Content",style: TextStyle(fontFamily: 'Quicksand'),),
       content: Container(
         height: 300,
         child: Column(
           children: [
             const Text(
-                "Would you like to add content to the previous section?"),
+                "Would you like to add content to the previous section?",style: TextStyle(fontFamily: 'Quicksand'),),
             const SizedBox(
               height: 20,
             ),
@@ -99,7 +99,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
               onPressed: () {
                 _showAddContentDialog(context);
               },
-              child: const Text('Add'),
+              child: const Text('Add',style: TextStyle(fontFamily: 'Quicksand'),),
               style: ElevatedButton.styleFrom(
                 primary: Color(0xFF042D29),
                 textStyle: TextStyle(
@@ -115,7 +115,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
             const SizedBox(
               height: 30,
             ),
-            const Text("Create a new one?"),
+            const Text("Create a new one?",style: TextStyle(fontFamily: 'Quicksand'),),
             const SizedBox(
               height: 20,
             ),
@@ -123,7 +123,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
               onPressed: () {
                 _showNewContentDialog(context);
               },
-              child: const Text('New'),
+              child: const Text('New',style: TextStyle(fontFamily: 'Quicksand'),),
               style: ElevatedButton.styleFrom(
                 primary: Color(0xFF042D29),
                 textStyle: TextStyle(
@@ -146,7 +146,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Add Content"),
+          title: const Text("Add Content",style: TextStyle(fontFamily: 'Quicksand'),),
           content: Container(
             width: 270,
             height: 400,
@@ -161,7 +161,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
                   onPressed: () {
                     _selectImage();
                   },
-                  child: const Text('Select Images from Gallery'),
+                  child: const Text('Select Images from Gallery',style: TextStyle(fontFamily: 'Quicksand'),),
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xFF042D29),
                     textStyle: TextStyle(
@@ -190,7 +190,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text('Cancel',style: TextStyle(fontFamily: 'Quicksand'),),
               style: ElevatedButton.styleFrom(
                 primary: Color(0xFF042D29),
                 textStyle: TextStyle(
@@ -206,7 +206,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
               onPressed: () {
                 addImage();
               },
-              child: const Text('Add'),
+              child: const Text('Add',style: TextStyle(fontFamily: 'Quicksand'),),
               style: ElevatedButton.styleFrom(
                 primary: Color(0xFF042D29),
                 textStyle: TextStyle(
@@ -228,7 +228,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Add Content"),
+          title: const Text("Add Content",style: TextStyle(fontFamily: 'Quicksand'),),
           content: Container(
             width: 270,
             height: 400,
@@ -243,7 +243,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
                   onPressed: () {
                     _selectImage();
                   },
-                  child: const Text('Select Images from Gallery'),
+                  child: const Text('Select Images from Gallery',style: TextStyle(fontFamily: 'Quicksand'),),
                   style: ElevatedButton.styleFrom(
                     primary: Color(0xFF042D29),
                     textStyle: TextStyle(
@@ -272,7 +272,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text('Cancel',style: TextStyle(fontFamily: 'Quicksand'),),
               style: ElevatedButton.styleFrom(
                 primary: Color(0xFF042D29),
                 textStyle: TextStyle(
@@ -288,7 +288,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
               onPressed: () {
                 storeImage();
               },
-              child: const Text('Add'),
+              child: const Text('Add',style: TextStyle(fontFamily: 'Quicksand'),),
               style: ElevatedButton.styleFrom(
                 primary: Color(0xFF042D29),
                 textStyle: TextStyle(

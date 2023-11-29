@@ -7,6 +7,7 @@ const cors=require("cors");
 const UserModel = require("./models/User");
 app.use(express.json());
 app.use(cors());
+const PORT = process.env.PORT || 3000;
 mongoose.connect("mongodb://127.0.0.1:27017/English_Project_App");
 const connection = mongoose.connection;
 connection.once('open', () => {
@@ -36,12 +37,15 @@ app.post("/createContent", async (req, res) => {
   try {
     const title = req.body.title;
     const content = req.body.content;
-    const collectionName = title;
     const contentSchema = new mongoose.Schema({
       content: String,
+      timestamp: {
+        type: Date,
+        default: Date.now,
+      },
     });
-    const Content = mongoose.model(collectionName, contentSchema);
-    const newContent = new Content({ title, content });
+    const Content = mongoose.model(title, contentSchema);
+    const newContent = new Content({ content });
     await newContent.save();
     res.status(200).send("Content created successfully.");
   } catch (error) {
@@ -52,12 +56,24 @@ app.post("/createContent", async (req, res) => {
 
 app.post("/addContent", async (req, res) => {
   try {
-    const originalTitle = req.body.title;
-    const lowercaseTitle = originalTitle.toLowerCase();
-    const contentSchema = new mongoose.Schema({
-      content: String,
-    });
-    const ContentModel = mongoose.model(lowercaseTitle, contentSchema);
+    const title = req.body.title;
+    const lowercaseTitle = title.toLowerCase();
+    let ContentModel;
+
+    try {
+      ContentModel = mongoose.model(lowercaseTitle);
+    } catch (error) {
+      ContentModel = mongoose.model(
+        lowercaseTitle,
+        new mongoose.Schema({
+          content: String,
+          timestamp: {
+            type: Date,
+            default: Date.now,
+          },
+        })
+      );
+    }
 
     if (!ContentModel) {
       return res
@@ -73,10 +89,11 @@ app.post("/addContent", async (req, res) => {
 
     res.status(201).send("Content added successfully.");
   } catch (error) {
-    console.error("Error uploading image:", error);
+    console.error("Error adding content:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "public/Images");
@@ -279,7 +296,30 @@ app.delete("/deleteCollectionName", async (req, res) => {
   }
 });
 
+app.get('/data/:title', async (req, res) => {
+  const title = req.params.title;
+  try {
+    const contentSchema = new mongoose.Schema({
+      content: String,
+      timestamp: {
+        type: Date,
+        default: Date.now,
+      },
+    });
+    const ContentModel = mongoose.model(title, contentSchema);
+    const result = await ContentModel.findOne();
+    if (result) {
+      res.json({ content: result.content });
+    } else {
+      res.status(404).json({ error: 'Data not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
-app.listen(3000, () => {
+
+app.listen(PORT, () => {
   console.log(`Server is running on port 3000`);
 });
