@@ -306,8 +306,16 @@ app.get('/data/:title', async (req, res) => {
         default: Date.now,
       },
     });
-    const ContentModel = mongoose.model(title, contentSchema);
+
+    let ContentModel;
+    try {
+      ContentModel = mongoose.model(title);
+    } catch (error) {
+      ContentModel = mongoose.model(title, contentSchema);
+    }
+
     const results = await ContentModel.find();
+
     if (results.length > 0) {
       const contentArray = results.map(result => result.content);
       res.json({ content: contentArray });
@@ -319,6 +327,7 @@ app.get('/data/:title', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
 
 
 

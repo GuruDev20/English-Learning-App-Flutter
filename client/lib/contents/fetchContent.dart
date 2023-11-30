@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:video_player/video_player.dart';
@@ -14,12 +15,14 @@ class FetchContent extends StatefulWidget {
 
 class _FetchContentState extends State<FetchContent> {
   List<dynamic> contentArray = [];
+  late Future<void> _initializeVideoPlayerFuture;
   late VideoPlayerController _controller;
 
   @override
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network('');
+    _initializeVideoPlayerFuture = _controller.initialize();
     fetchData();
   }
 
@@ -33,11 +36,11 @@ class _FetchContentState extends State<FetchContent> {
         setState(() {
           contentArray = content;
         });
-        if (contentArray.isNotEmpty && _isVideo(contentArray[0])) {
-          _controller = VideoPlayerController.network(contentArray[0]);
-          _controller.initialize().then((_) {
-            setState(() {});
-          });
+        if (contentArray.isNotEmpty) {
+          if (_isVideo(contentArray[0])) {
+            _controller = VideoPlayerController.network(contentArray[0]);
+            _initializeVideoPlayerFuture = _controller.initialize();
+          }
         }
       } else {
         throw Exception('Failed to load data');
@@ -55,6 +58,75 @@ class _FetchContentState extends State<FetchContent> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  Widget _buildContentCard(dynamic content) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: 400,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          shadowColor: Colors.grey,
+          elevation: 10.0,
+          child: _buildContentWidget(content),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildContentWidget(dynamic content) {
+    if (_isVideo(content)) {
+      return _buildVideoPlayer();
+    } else if (content.endsWith('.jpg') || content.endsWith('.png')) {
+      return _buildImage(content);
+    } else {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text(
+            content.toString(),
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 22,
+              fontFamily: 'Quicksand',
+            ),
+          ),
+        ),
+      );
+    }
+  }
+  Widget _buildImage(String imagePath) {
+  imagePath = imagePath.replaceAll(r'\', '/');
+  String serverUrl = 'http://192.168.110.79:3000'; 
+  String imageUrl = '$serverUrl/$imagePath';
+
+  return Image.network(
+    imageUrl,
+    width: MediaQuery.of(context).size.width,
+    height: MediaQuery.of(context).size.height,
+    fit: BoxFit.cover,
+  );
+}
+
+
+  Widget _buildVideoPlayer() {
+    return FutureBuilder(
+      future: _initializeVideoPlayerFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return AspectRatio(
+            aspectRatio: _controller.value.aspectRatio,
+            child: VideoPlayer(_controller),
+          );
+        } else {
+          return CircularProgressIndicator();
+        }
+      },
+    );
   }
 
   @override
@@ -79,51 +151,6 @@ class _FetchContentState extends State<FetchContent> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildContentCard(dynamic content) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          shadowColor: Colors.grey,
-          elevation: 10.0,
-          child: _buildContentWidget(content),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildContentWidget(dynamic content) {
-    if (_isVideo(content)) {
-      return _buildVideoPlayer();
-    } else {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Text(
-            content.toString(),
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 22,
-              fontFamily: 'Quicksand',
-            ),
-          ),
-        ),
-      );
-    }
-  }
-
-  Widget _buildVideoPlayer() {
-    return AspectRatio(
-      aspectRatio: _controller.value.aspectRatio,
-      child: VideoPlayer(_controller),
     );
   }
 }
