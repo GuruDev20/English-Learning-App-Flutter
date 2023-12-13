@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:video_player/video_player.dart';
 
 class FetchContent extends StatefulWidget {
   static const String id = "FetchContent";
   final String title;
+
   FetchContent({required this.title});
 
   @override
@@ -15,19 +14,15 @@ class FetchContent extends StatefulWidget {
 
 class _FetchContentState extends State<FetchContent> {
   List<dynamic> contentArray = [];
-  late Future<void> _initializeVideoPlayerFuture;
-  late VideoPlayerController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network('');
-    _initializeVideoPlayerFuture = _controller.initialize();
     fetchData();
   }
 
   Future<void> fetchData() async {
-    final apiUrl = 'http://192.168.110.79:3000/data/${widget.title}';
+    final apiUrl = 'http://192.168.175.79:3000/data/${widget.title}';
     try {
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
@@ -36,12 +31,6 @@ class _FetchContentState extends State<FetchContent> {
         setState(() {
           contentArray = content;
         });
-        if (contentArray.isNotEmpty) {
-          if (_isVideo(contentArray[0])) {
-            _controller = VideoPlayerController.network(contentArray[0]);
-            _initializeVideoPlayerFuture = _controller.initialize();
-          }
-        }
       } else {
         throw Exception('Failed to load data');
       }
@@ -50,20 +39,10 @@ class _FetchContentState extends State<FetchContent> {
     }
   }
 
-  bool _isVideo(dynamic data) {
-    return data is String && data.endsWith('.mp4');
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
   Widget _buildContentCard(dynamic content) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: 400,
+      height: MediaQuery.of(context).size.height,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Card(
@@ -79,9 +58,8 @@ class _FetchContentState extends State<FetchContent> {
   }
 
   Widget _buildContentWidget(dynamic content) {
-    if (_isVideo(content)) {
-      return _buildVideoPlayer();
-    } else if (content.endsWith('.jpg') || content.endsWith('.png')) {
+    if (content is String &&
+        (content.endsWith('.jpg') || content.endsWith('.png'))) {
       return _buildImage(content);
     } else {
       return Center(
@@ -99,33 +77,15 @@ class _FetchContentState extends State<FetchContent> {
       );
     }
   }
+
   Widget _buildImage(String imagePath) {
-  imagePath = imagePath.replaceAll(r'\', '/');
-  String serverUrl = 'http://192.168.110.79:3000'; 
-  String imageUrl = '$serverUrl/$imagePath';
-
-  return Image.network(
-    imageUrl,
-    width: MediaQuery.of(context).size.width,
-    height: MediaQuery.of(context).size.height,
-    fit: BoxFit.cover,
-  );
-}
-
-
-  Widget _buildVideoPlayer() {
-    return FutureBuilder(
-      future: _initializeVideoPlayerFuture,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          return AspectRatio(
-            aspectRatio: _controller.value.aspectRatio,
-            child: VideoPlayer(_controller),
-          );
-        } else {
-          return CircularProgressIndicator();
-        }
-      },
+    imagePath = 'http://192.168.175.79:3000/Images/$imagePath';
+    print(imagePath);
+    return Image.network(
+      imagePath,
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      fit: BoxFit.cover,
     );
   }
 
@@ -141,15 +101,11 @@ class _FetchContentState extends State<FetchContent> {
         backgroundColor: Color(0xFF042D29),
         toolbarHeight: 70,
       ),
-      body: SizedBox(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: contentArray.map((content) {
-              return _buildContentCard(content);
-            }).toList(),
-          ),
-        ),
+      body: PageView.builder(
+        itemCount: contentArray.length,
+        itemBuilder: (context, index) {
+          return _buildContentCard(contentArray[index]);
+        },
       ),
     );
   }

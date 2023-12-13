@@ -7,6 +7,7 @@ import 'package:client/contents/fetchContent.dart';
 import 'package:client/screens/home.dart';
 import 'package:client/screens/login.dart';
 import 'package:client/screens/register.dart';
+import 'package:client/screens/viewcontent.dart';
 import 'package:client/screens/welcome.dart';
 import 'package:client/screens/whyenglish.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,8 @@ class MainApp extends StatelessWidget {
         PhotoScreen.id: (context) => const PhotoScreen(),
         AssessmentScreen.id: (context) => const AssessmentScreen(),
         AdminEdit.id: (context) => AdminEdit(),
-        FetchContent.id:(context) => FetchContent(title: '',)
+        FetchContent.id:(context) => FetchContent(title: '',),
+        ViewContent.id:(context) => ViewContent(title:'')
       },
     );
   }

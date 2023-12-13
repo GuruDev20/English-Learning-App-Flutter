@@ -12,7 +12,7 @@ class _AdminEditState extends State<AdminEdit> {
   TextEditingController contentsController = TextEditingController();
   Future<void> createContent() async{
     final response = await http.post(
-      Uri.parse('http://192.168.110.79:3000/createContent'),
+      Uri.parse('http://192.168.175.79:3000/createContent'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -47,7 +47,7 @@ class _AdminEditState extends State<AdminEdit> {
   }
   Future<void> addContent() async{
     final response = await http.post(
-      Uri.parse('http://192.168.110.79:3000/addContent'),
+      Uri.parse('http://192.168.175.79:3000/addContent'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },

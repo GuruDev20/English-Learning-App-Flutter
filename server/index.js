@@ -4,6 +4,7 @@ const app = express();
 const path = require("path");
 const multer = require("multer");
 const cors=require("cors");
+app.use(express.static('public'))
 const UserModel = require("./models/User");
 app.use(express.json());
 app.use(cors());
@@ -96,20 +97,17 @@ app.post("/addContent", async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "public/Images");
+    cb(null, 'public/Images');
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
-    );
+    cb(null, file.fieldname + '_' + Date.now() + path.extname(file.originalname));
   },
 });
 
 const upload = multer({ storage: storage });
 app.post("/upload", upload.single("image"), async (req, res) => {
   try {
-    const imagePath = req.file.path;
+    const imagePath = req.file.filename;
     const originalTitle = req.body.title;
     const lowercaseTitle = originalTitle.toLowerCase();
     let ContentModel;
@@ -141,7 +139,7 @@ app.post("/upload", upload.single("image"), async (req, res) => {
 app.post("/newupload", upload.single("image"), async (req, res) => {
   try {
     const title = req.body.title;
-    const imagePath = req.file.path;
+    const imagePath = req.file.filename;
 
     const contentSchema = new mongoose.Schema({
       content: {
@@ -179,7 +177,7 @@ const vupload = multer({ storage: vstorage });
 app.post('/newVideo', vupload.single('video'), async (req, res) => { 
   try {
     const title = req.body.title;
-    const videoPath = req.file.path;
+    const videoPath = req.file.filename;
 
     const contentSchema = new mongoose.Schema({
       content: {
@@ -204,7 +202,7 @@ app.post('/newVideo', vupload.single('video'), async (req, res) => {
 app.post('/oldVideo', vupload.single('video'), async (req, res) => {
   try {
     const title = req.body.title;
-    const videoPath = req.file.path;
+    const videoPath = req.file.filename;
     const lowercaseTitle = title.toLowerCase();
     let ContentModel;
 

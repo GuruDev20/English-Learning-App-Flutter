@@ -19,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> getUser() async {
     final response = await http.get(
-      Uri.parse('http://192.168.110.79:3000/getUser'),
+      Uri.parse('http://192.168.175.79:3000/getUser'),
     );
     if (response.statusCode == 200) {
       final List<dynamic> users = json.decode(response.body);
@@ -103,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         fontFamily: 'Quicksand',
                         fontSize: 25.0,
-                        color: Color(0xFF042D29),
+                        color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -113,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         labelText: 'Email',
                         labelStyle: TextStyle(
                           fontFamily: 'Quicksand',
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black),
@@ -127,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         labelText: 'Password',
                         labelStyle: TextStyle(
                           fontFamily: 'Quicksand',
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black),
