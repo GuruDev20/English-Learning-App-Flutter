@@ -41,6 +41,7 @@ dependencies:
   curved_navigation_bar: ^1.0.3
   image_picker: ^1.0.4
   video_player: ^2.8.1
+  chewie: ^1.7.4
 
 dev_dependencies:
   flutter_test:
