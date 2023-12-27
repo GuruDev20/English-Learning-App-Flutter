@@ -27,7 +27,7 @@ class _VideoScreenState extends State<VideoScreen> {
       return;
     }
 
-    var url = Uri.parse("http://192.168.19.79:3000/oldVideo");
+    var url = Uri.parse("http://192.168.137.1:3000/oldVideo");
     String title = titleController.text;
     var request = http.MultipartRequest('POST', url);
     request.fields['title'] = title;
@@ -61,7 +61,7 @@ class _VideoScreenState extends State<VideoScreen> {
       return;
     }
 
-    var url = Uri.parse("http://192.168.19.79:3000/newVideo");
+    var url = Uri.parse("http://192.168.137.1:3000/newVideo");
     String title = titleController.text;
     var request = http.MultipartRequest('POST', url);
     request.fields['title'] = title;

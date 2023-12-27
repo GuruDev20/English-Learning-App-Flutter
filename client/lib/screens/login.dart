@@ -19,7 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> getUser() async {
     final response = await http.get(
-      Uri.parse('http://192.168.19.79:3000/getUser'),
+      Uri.parse('http://192.168.137.1:3000/getUser'),
     );
     if (response.statusCode == 200) {
       final List<dynamic> users = json.decode(response.body);

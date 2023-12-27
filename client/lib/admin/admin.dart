@@ -28,7 +28,7 @@ class _AdminScreenState extends State<AdminScreen> {
 
   Future<void> fetchCollectionNames() async {
     try {
-      final response = await http.get(Uri.parse('http://192.168.19.79:3000/collectionNames'));
+      final response = await http.get(Uri.parse('http://192.168.137.1:3000/collectionNames'));
       if (response.statusCode == 200) {
         setState(() {
           collectionNames = List<String>.from(json.decode(response.body));
@@ -121,7 +121,7 @@ class _AdminScreenState extends State<AdminScreen> {
   Future<void> updateCollectionName(String oldName, String newName) async {
     try {
       final response = await http.put(
-        Uri.parse('http://192.168.19.79:3000/updateCollectionName'),
+        Uri.parse('http://192.168.137.1:3000/updateCollectionName'),
         body: jsonEncode({'oldName': oldName, 'newName': newName}),
         headers: {'Content-Type': 'application/json'},
       );
@@ -138,7 +138,7 @@ class _AdminScreenState extends State<AdminScreen> {
   Future<void> collectionNameDelete(String name) async {
     try {
       final response = await http.delete(
-        Uri.parse('http://192.168.19.79:3000/deleteCollectionName'),
+        Uri.parse('http://192.168.137.1:3000/deleteCollectionName'),
         body: jsonEncode({'collectionName': name}),
         headers: {'Content-Type': 'application/json'},
       );

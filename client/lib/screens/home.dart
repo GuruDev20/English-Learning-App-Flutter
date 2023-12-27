@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> fetchCollectionNames() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.175.79:3000/collectionNames'));
+          .get(Uri.parse('http://192.168.19.79:3000/collectionNames'));
       if (response.statusCode == 200) {
         setState(() {
           collectionNames = List<String>.from(json.decode(response.body));

@@ -22,7 +22,7 @@ class _ViewContentState extends State<ViewContent> {
   }
 
   Future<void> fetchData() async {
-    final apiUrl = 'http://192.168.19.79:3000/data/${widget.title}';
+    final apiUrl = 'http://192.168.137.1:3000/data/${widget.title}';
     try {
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
@@ -79,7 +79,7 @@ class _ViewContentState extends State<ViewContent> {
   }
 
   Widget _buildImage(String imagePath) {
-    imagePath = 'http://192.168.19.79:3000/Images/$imagePath';
+    imagePath = 'http://192.168.137.1:3000/Images/$imagePath';
     print(imagePath);
     return Image.network(
       imagePath,

@@ -16,8 +16,8 @@ class FetchContent extends StatefulWidget {
 
 class _FetchContentState extends State<FetchContent> {
   List<dynamic> contentArray = [];
-  late VideoPlayerController _videoPlayerController;
-  late ChewieController _chewieController;
+  // late VideoPlayerController _videoPlayerController;
+  // late ChewieController _chewieController;
 
   @override
   void initState() {
@@ -26,7 +26,7 @@ class _FetchContentState extends State<FetchContent> {
   }
 
   Future<void> fetchData() async {
-    final apiUrl = 'http://192.168.19.79:3000/data/${widget.title}';
+    final apiUrl = 'http://192.168.137.1:3000/data/${widget.title}';
     try {
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
@@ -65,9 +65,11 @@ class _FetchContentState extends State<FetchContent> {
     if (content is String &&
         (content.endsWith('.jpg') || content.endsWith('.png'))) {
       return _buildImage(content);
-    } else if (content is String && content.endsWith('.mp4')) {
-      return _buildVideo(content);
-    } else {
+        }
+    // } else if (content is String && content.endsWith('.mp4')) {
+    //   //return _buildVideo(content);
+    // } 
+    else {
       return Center(
         child: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -85,7 +87,7 @@ class _FetchContentState extends State<FetchContent> {
   }
 
   Widget _buildImage(String imagePath) {
-    imagePath = 'http://192.168.19.79:3000/Images/$imagePath';
+    imagePath = 'http://192.168.137.1:3000/Images/$imagePath';
     print(imagePath);
     return Image.network(
       imagePath,
@@ -95,43 +97,43 @@ class _FetchContentState extends State<FetchContent> {
     );
   }
 
-  Future<void> _initializeVideoPlayer(String videoPath) async {
-    try {
-      _videoPlayerController = VideoPlayerController.network(videoPath);
-      await _videoPlayerController.initialize();
-    } catch (e) {
-      print('Error initializing video player: $e');
-    }
-  }
+  // Future<void> _initializeVideoPlayer(String videoPath) async {
+  //   try {
+  //     _videoPlayerController = VideoPlayerController.network(videoPath);
+  //     await _videoPlayerController.initialize();
+  //   } catch (e) {
+  //     print('Error initializing video player: $e');
+  //   }
+  // }
 
-  Widget _buildVideo(String videoPath) {
-    videoPath = 'http://192.168.19.79:3000/Videos/$videoPath';
-    print(videoPath);
+  // Widget _buildVideo(String videoPath) {
+  //   videoPath = 'http://192.168.19.79:3000/Videos/$videoPath';
+  //   print(videoPath);
 
-    _initializeVideoPlayer(videoPath);
+  //   _initializeVideoPlayer(videoPath);
 
-    if (_videoPlayerController.value.isInitialized) {
-      _chewieController = ChewieController(
-        videoPlayerController: _videoPlayerController,
-        aspectRatio: 16 / 9,
-        autoInitialize: true,
-        looping: false,
-        autoPlay: false,
-      );
-      return Chewie(controller: _chewieController);
-    } else {
-      return Center(
-        child: Text('Error loading video'),
-      );
-    }
-  }
+  //   if (_videoPlayerController.value.isInitialized) {
+  //     _chewieController = ChewieController(
+  //       videoPlayerController: _videoPlayerController,
+  //       aspectRatio: 16 / 9,
+  //       autoInitialize: true,
+  //       looping: false,
+  //       autoPlay: false,
+  //     );
+  //     return Chewie(controller: _chewieController);
+  //   } else {
+  //     return Center(
+  //       child: Text('Error loading video'),
+  //     );
+  //   }
+  // }
 
-  @override
-  void dispose() {
-    _videoPlayerController.dispose();
-    _chewieController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _videoPlayerController.dispose();
+  //   _chewieController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
