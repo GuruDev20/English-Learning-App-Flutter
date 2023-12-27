@@ -9,7 +9,9 @@ const UserModel = require("./models/User");
 
 const password = encodeURIComponent("<Achielles@20>");
 const username = encodeURIComponent("<Dev>");
-const uri = `mongodb+srv://admin:${password}@cluster0.ejxfemy.mongodb.net/your-database-name?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://admin:${password}@cluster0.ejxfemy.mongodb.net/?retryWrites=true&w=majority`;
+
+
 
 const client = new MongoClient(uri, {
   serverApi: {
