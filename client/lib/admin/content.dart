@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:client/utils/url.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 class AdminEdit extends StatefulWidget {
@@ -12,7 +13,7 @@ class _AdminEditState extends State<AdminEdit> {
   TextEditingController contentsController = TextEditingController();
   Future<void> createContent() async{
     final response = await http.post(
-      Uri.parse('http://192.168.137.1:3000/createContent'),
+      Uri.parse('http://${URL}:3000/createContent'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },
@@ -47,7 +48,7 @@ class _AdminEditState extends State<AdminEdit> {
   }
   Future<void> addContent() async{
     final response = await http.post(
-      Uri.parse('http://192.168.137.1:3000/addContent'),
+      Uri.parse('http://${URL}:3000/addContent'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },

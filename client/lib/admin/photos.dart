@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:client/utils/url.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,7 +29,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
       return;
     }
 
-    var url = Uri.parse("http://192.168.137.1:3000/newupload");
+    var url = Uri.parse("http://192.168.254.79:3000/newupload");
     String title = titleController.text;
     var request = http.MultipartRequest('POST', url);
     request.fields['title'] = title;
@@ -57,7 +58,7 @@ class _PhotoScreenState extends State<PhotoScreen> {
       return;
     }
 
-    var url = Uri.parse("http://192.168.137.1:3000/upload");
+    var url = Uri.parse('http://${URL}:3000/upload');
     String title = titleController.text;
     var request = http.MultipartRequest('POST', url);
     request.fields['title'] = title;

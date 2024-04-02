@@ -1,4 +1,5 @@
 import 'package:client/screens/viewcontent.dart';
+import 'package:client/utils/url.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -21,7 +22,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> fetchCollectionNames() async {
     try {
       final response = await http
-          .get(Uri.parse('http://192.168.19.79:3000/collectionNames'));
+          .get(Uri.parse('http://${URL}:3000/collectionNames'));
       if (response.statusCode == 200) {
         setState(() {
           collectionNames = List<String>.from(json.decode(response.body));

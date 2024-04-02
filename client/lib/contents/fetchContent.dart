@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:video_player/video_player.dart';
-import 'package:chewie/chewie.dart';
-
+// import 'package:video_player/video_player.dart';
+// import 'package:chewie/chewie.dart';
+import 'package:client/utils/url.dart';
 class FetchContent extends StatefulWidget {
   static const String id = "FetchContent";
   final String title;
@@ -26,7 +26,7 @@ class _FetchContentState extends State<FetchContent> {
   }
 
   Future<void> fetchData() async {
-    final apiUrl = 'http://192.168.137.1:3000/data/${widget.title}';
+    final apiUrl = 'http://${URL}:3000/data/${widget.title}';
     try {
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
@@ -87,7 +87,7 @@ class _FetchContentState extends State<FetchContent> {
   }
 
   Widget _buildImage(String imagePath) {
-    imagePath = 'http://192.168.137.1:3000/Images/$imagePath';
+    imagePath = 'http://192.168.254.79:3000/Images/$imagePath';
     print(imagePath);
     return Image.network(
       imagePath,

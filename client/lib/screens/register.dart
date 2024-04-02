@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:client/utils/url.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'login.dart';
@@ -41,7 +42,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
 
     final response = await http.post(
-      Uri.parse('http://192.168.137.1:3000/createUser'),
+      Uri.parse('http://${URL}:3000/createUser'),
       headers: <String, String>{
         'Content-Type': 'application/json',
       },

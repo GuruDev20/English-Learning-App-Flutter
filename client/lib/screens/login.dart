@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:client/utils/url.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:client/admin/admin.dart';
@@ -19,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> getUser() async {
     final response = await http.get(
-      Uri.parse('http://192.168.137.1:3000/getUser'),
+      Uri.parse('http://${URL}:3000/getUser'),
     );
     if (response.statusCode == 200) {
       final List<dynamic> users = json.decode(response.body);

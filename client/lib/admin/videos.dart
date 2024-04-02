@@ -1,3 +1,4 @@
+import 'package:client/utils/url.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
@@ -27,7 +28,7 @@ class _VideoScreenState extends State<VideoScreen> {
       return;
     }
 
-    var url = Uri.parse("http://192.168.137.1:3000/oldVideo");
+    var url = Uri.parse("http://${URL}:3000/oldVideo");
     String title = titleController.text;
     var request = http.MultipartRequest('POST', url);
     request.fields['title'] = title;
@@ -61,7 +62,7 @@ class _VideoScreenState extends State<VideoScreen> {
       return;
     }
 
-    var url = Uri.parse("http://192.168.137.1:3000/newVideo");
+    var url = Uri.parse("http://${URL}:3000/newVideo");
     String title = titleController.text;
     var request = http.MultipartRequest('POST', url);
     request.fields['title'] = title;

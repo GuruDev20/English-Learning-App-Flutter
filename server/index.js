@@ -1,4 +1,3 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
 const mongoose = require('mongoose');
 const express = require("express");
 const app = express();
@@ -7,48 +6,11 @@ const multer = require("multer");
 const cors = require("cors");
 const UserModel = require("./models/User");
 
-const password = encodeURIComponent("<Achielles@20>");
-const username = encodeURIComponent("<Dev>");
-const uri = `mongodb+srv://admin:${password}@cluster0.ejxfemy.mongodb.net/?retryWrites=true&w=majority`;
-
-
-
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
-
-async function run() {
-  try {
-    await client.connect();
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    await client.close();
-  }
-}
-run().catch(console.dir);
-
-mongoose.connect(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-
-const connection = mongoose.connection;
-connection.once('open', () => {
-  console.log('MongoDB database connection established successfully');
-  fetchCollectionNames();
-});
-
+mongoose.connect('mongodb://127.0.0.1:27017/English_Project_App');
 app.use(express.static('public'));
 app.use(express.json());
 app.use(cors());
 const PORT = process.env.PORT || 3000;
-
 app.post("/createUser", async (req, res) => {
   try {
     const data = new UserModel(req.body);
@@ -265,18 +227,15 @@ let collectionNames = [];
 
 async function fetchCollectionNames() {
   try {
-    const collections = await mongoose.connection.db
-      .listCollections()
-      .toArray();
+    const collections = await mongoose.connection.db.listCollections().toArray();
     collectionNames = collections
       .map((collection) => collection.name)
-      .filter((name) => name !== "users");
-    console.log("Collection names fetched:", collectionNames);
+      .filter((name) => name !== 'users');
+    console.log('Collection names fetched:', collectionNames);
   } catch (error) {
-    console.error("Error fetching collection names:", error);
+    console.error('Error fetching collection names:', error);
   }
 }
-
 app.get("/collectionNames", async (req, res) => {
   res.json(collectionNames);
 });
@@ -360,9 +319,11 @@ app.get('/data/:title', async (req, res) => {
   }
 });
 
-
-
-
-app.listen(PORT, () => {
-  console.log(`Server is running on port 3000`);
+mongoose.connection.on('connected', () => {
+  fetchCollectionNames().then(() => {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  });
 });
